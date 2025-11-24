@@ -1,6 +1,5 @@
 import requests
 
-# Singleton Pattern
 class WeatherAPIClient:
     _instance = None
 
@@ -9,8 +8,15 @@ class WeatherAPIClient:
             cls._instance = super(WeatherAPIClient, cls).__new__(cls)
         return cls._instance
 
-    # Facade Method 
     def get_weather(self, city):
-        url = f"https://wttr.in/{city}?format=j1"
-        response = requests.get(url)
+        url = "http://127.0.0.1:5000/weather"
+        params = {"city": city}
+        response = requests.get(url, params=params)
+        if response.status_code != 200:
+            raise ValueError(f"Error fetching weather for {city}")
         return response.json()
+
+# Example usage
+client = WeatherAPIClient()
+weather = client.get_weather("Berlin")
+print(weather)
